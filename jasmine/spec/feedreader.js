@@ -30,7 +30,6 @@ $(function() {
          */
         it('have an URL defined and not empty', function () {
             allFeeds.forEach(function (feed) {
-                expect(feed.url).toBeDefined();
                 expect(feed.url.trim()).toBeTruthy();
             });
         });
@@ -42,7 +41,6 @@ $(function() {
          */
         it('have a name defined and not empty', function () {
             allFeeds.forEach(function (feed) {
-                expect(feed.name).toBeDefined();
                 expect(feed.name.trim()).toBeTruthy();
             });
         });
@@ -64,23 +62,10 @@ $(function() {
         it('has a visibility toggled by a click on the menu icon', function () {
             var menuIcon = document.getElementsByClassName('menu-icon-link')[0];
 
-            /* Trigger a builtin click event
-             * source: https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
-             */
-            function simulateClick() {
-                var event = new MouseEvent('click', {
-                    'view': window,
-                    'bubbles': true,
-                    'cancelable': true
-                });
-
-                return menuIcon.dispatchEvent(event);
-            }
-
             expect(document.body.classList).toContain('menu-hidden');
-            expect(simulateClick()).toBe(true);
+            menuIcon.click();
             expect(document.body.classList).not.toContain('menu-hidden');
-            expect(simulateClick()).toBe(true);
+            menuIcon.click();
             expect(document.body.classList).toContain('menu-hidden');
         });
     });
@@ -91,12 +76,8 @@ $(function() {
          * a single .entry element within the .feed container.
          */
         it('contains at least a single .entry element after loadFeed function is called', function (done) {
-            var feedContainerList = document.getElementsByClassName('feed');
-            expect(feedContainerList.length).toBeGreaterThan(0);
-            var feedContainer = feedContainerList[0];
-
             loadFeed(0, function () {
-                var entryList = feedContainer.getElementsByClassName('entry');
+                var entryList = document.querySelectorAll('.feed .entry');
 
                 expect(entryList.length).toBeGreaterThan(0);
                 done();
@@ -104,7 +85,7 @@ $(function() {
         });
     });
 
-     describe('New Feed Selection', function() {
+     xdescribe('New Feed Selection', function() {
          /* Ensures when a new feed is loaded
           * by the loadFeed function that the content actually changes.
           */
@@ -115,9 +96,11 @@ $(function() {
 
              loadFeed(0, function () {
                  var firstList = Array.prototype.slice.call(feedContainer.getElementsByClassName('entry'), 0);
+                 console.log(firstList);
 
                  loadFeed(1, function () {
-                     var secondList = feedContainer.getElementsByClassName('entry');
+                     var secondList = Array.prototype.slice.call(feedContainer.getElementsByClassName('entry'), 0);
+                     console.log(secondList);
 
                      expect(firstList).not.toEqual(secondList);
                      done();
