@@ -86,32 +86,43 @@ $(function() {
     });
 
     describe('Initial Entries', function() {
-        beforeEach(function(done) {
-            loadFeed(0, done);
-        });
-
         /* Ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          */
         it('contains at least a single .entry element after loadFeed function is called', function (done) {
-            var feedContainer = document.getElementsByClassName('feed')[0];
-            var entryList = feedContainer.getElementsByClassName('entry');
+            var feedContainerList = document.getElementsByClassName('feed');
+            expect(feedContainerList.length).toBeGreaterThan(0);
+            var feedContainer = feedContainerList[0];
 
-            expect(entryList.length).toBeGreaterThan(0);
+            loadFeed(0, function () {
+                var entryList = feedContainer.getElementsByClassName('entry');
 
-            done();
+                expect(entryList.length).toBeGreaterThan(0);
+                done();
+            });
         });
     });
 
      describe('New Feed Selection', function() {
-
-         /* TODO: Write a test that ensures when a new feed is loaded
+         /* Ensures when a new feed is loaded
           * by the loadFeed function that the content actually changes.
-          * Remember, loadFeed() is asynchronous.
           */
-         it('makes the content actually changes', function () {
+         it('makes the content actually changes', function (done) {
+             var feedContainerList = document.getElementsByClassName('feed');
+             expect(feedContainerList.length).toBeGreaterThan(0);
+             var feedContainer = feedContainerList[0];
 
+             loadFeed(0, function () {
+                 var firstList = Array.prototype.slice.call(feedContainer.getElementsByClassName('entry'), 0);
+
+                 loadFeed(1, function () {
+                     var secondList = feedContainer.getElementsByClassName('entry');
+
+                     expect(firstList).not.toEqual(secondList);
+                     done();
+                 });
+             });
          });
      });
 
