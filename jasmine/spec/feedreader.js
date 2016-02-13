@@ -45,6 +45,11 @@ $(function() {
             });
         });
 
+        xit('contains smashingmagazine', function () {
+            expect(allFeeds.any(function (feed) {
+                return feed.name === 'smashingmagazine';
+            })).toBe(true);
+        });
     });
 
     describe('The menu', function() {
@@ -85,24 +90,52 @@ $(function() {
         });
     });
 
-     xdescribe('New Feed Selection', function() {
+     describe('New Feed Selection', function() {
          /* Ensures when a new feed is loaded
           * by the loadFeed function that the content actually changes.
           */
-         it('makes the content actually changes', function (done) {
-             var feedContainerList = document.getElementsByClassName('feed');
-             expect(feedContainerList.length).toBeGreaterThan(0);
-             var feedContainer = feedContainerList[0];
 
+         // Take 2 Array of Element or 2 Element and check if they have the same innerHTML
+         function haveSameInnerHTML (list1, list2) {
+             if (! ('innerHTML' in list1 && 'innerHTML' in list2) &&
+                 ! ('length' in list1 && 'length' in list2)) {
+                 return false
+             }
+
+             if ('innerHTML' in list1) {
+                 return list1.innerHTML === list2.innerHTML;
+             } else {
+                 if (list1.length !== list2.length) {
+                     return false
+                 } else {
+                     return list1.every(function (el, idx) {
+                         return haveSameInnerHTML(list1[idx], list2[idx]);
+                     });
+                 }
+             }
+         }
+
+         it('makes the content actually changes', function (done) {
              loadFeed(0, function () {
-                 var firstList = Array.prototype.slice.call(feedContainer.getElementsByClassName('entry'), 0);
-                 console.log(firstList);
+                 var firstList = Array.prototype.slice.call(document.querySelectorAll('.feed .entry'), 0);
 
                  loadFeed(1, function () {
-                     var secondList = Array.prototype.slice.call(feedContainer.getElementsByClassName('entry'), 0);
-                     console.log(secondList);
+                     var secondList = Array.prototype.slice.call(document.querySelectorAll('.feed .entry'), 0);
 
-                     expect(firstList).not.toEqual(secondList);
+                     expect(haveSameInnerHTML(firstList, secondList)).toBe(false);
+                     done();
+                 });
+             });
+         });
+
+         it('is the same if the selection is the same', function (done) {
+             loadFeed(0, function () {
+                 var firstList = Array.prototype.slice.call(document.querySelectorAll('.feed .entry'), 0);
+
+                 loadFeed(0, function () {
+                     var secondList = Array.prototype.slice.call(document.querySelectorAll('.feed .entry'), 0);
+
+                     expect(haveSameInnerHTML(firstList, secondList)).toBe(true);
                      done();
                  });
              });
