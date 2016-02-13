@@ -69,9 +69,13 @@ $(function() {
          * should have two expectations: does the menu display when
          * clicked and does it hide when clicked again.
          */
+        it('has a visibility toggled by a click on the menu icon', function () {
+
+        });
     });
 
     /* TODO: Write a new test suite named "Initial Entries" */
+    describe('Initial Entries', function() {
 
         /* TODO: Write a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
@@ -79,11 +83,21 @@ $(function() {
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+        it('contains at least a single .entry element after loadFeed function is called', function () {
 
-    /* TODO: Write a new test suite named "New Feed Selection"
+        });
+    });
 
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
+    /* TODO: Write a new test suite named "New Feed Selection" */
+     describe('New Feed Selection', function() {
+
+         /* TODO: Write a test that ensures when a new feed is loaded
+          * by the loadFeed function that the content actually changes.
+          * Remember, loadFeed() is asynchronous.
+          */
+         it('makes the content actually changes', function () {
+
+         });
+     });
+
 }());
